@@ -1,0 +1,92 @@
+FUNCTION_BLOCK "FB_Simulator"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT 
+      i_Enable : Bool;   // Start symulacji (np. flaga Pracy Maszyny)
+   END_VAR
+
+   VAR_OUTPUT 
+      q_Robot_X : Real;
+      q_Robot_Y : Real;
+      q_Robot_Z : Real;
+      q_PowerConsumption : Real;
+      q_PieceCount : DInt;
+   END_VAR
+
+   VAR 
+      stat_TimeSec : Real;
+      stat_SystemTime : DTL;
+      stat_RetVal : Int;
+      inst_Timer : TON_TIME;
+      stat_NoiseSeed : DInt := 123456789;
+      stat_Pieces : DInt;
+   END_VAR
+
+   VAR_TEMP 
+      tmp_NoiseX : Real;
+      tmp_NoiseY : Real;
+      tmp_NoiseZ : Real;
+      tmp_NoisePwr : Real;
+   END_VAR
+
+BEGIN
+	// 1. GENERATOR SZUMU (Linear Congruential Generator)
+	// Ponieważ S7-1500 nie ma wbudowanej funkcji losowej (RAND) w prostym SCL, 
+	// tworzymy prosty generator pseudolosowy w oparciu o seed:
+	
+	#stat_NoiseSeed := (#stat_NoiseSeed * 1103515245 + 12345) MOD 2147483647;
+	#tmp_NoiseX := (DINT_TO_REAL(#stat_NoiseSeed MOD 1000) / 1000.0) * 3.0 - 1.5; // Wahania od -1.5 do 1.5
+	
+	#stat_NoiseSeed := (#stat_NoiseSeed * 1103515245 + 12345) MOD 2147483647;
+	#tmp_NoiseY := (DINT_TO_REAL(#stat_NoiseSeed MOD 1000) / 1000.0) * 3.0 - 1.5; 
+	
+	#stat_NoiseSeed := (#stat_NoiseSeed * 1103515245 + 12345) MOD 2147483647;
+	#tmp_NoiseZ := (DINT_TO_REAL(#stat_NoiseSeed MOD 1000) / 1000.0) * 1.0 - 0.5; 
+	
+	#stat_NoiseSeed := (#stat_NoiseSeed * 1103515245 + 12345) MOD 2147483647;
+	#tmp_NoisePwr := (DINT_TO_REAL(#stat_NoiseSeed MOD 1000) / 1000.0) * 1.6 - 0.8; // Wahania mocy pobieranej
+	
+	// 2. CZAS SYSTEMOWY DLA SINUSOIDY
+	// Sprawdzamy lokalny czas sterownika, aby na jego podstawie układać ładne fale dla ruchów:
+	#stat_RetVal := RD_SYS_T(#stat_SystemTime);
+	// Konwersja sekund i części ułamkowych na płynną zmienną czasu "t":
+	#stat_TimeSec := USINT_TO_REAL(#stat_SystemTime.SECOND) + (UDINT_TO_REAL(#stat_SystemTime.NANOSECOND) / 1000000000.0);
+	
+	// 3. LOGIKA SYMULACJI
+	IF #i_Enable THEN
+	    // --- Symulacja RUCHU RAMIENIA ROBOTA (ruch po elipsie / okręgu) ---
+	    #q_Robot_X := (150.0 * SIN(#stat_TimeSec * 0.5)) + #tmp_NoiseX;
+	    #q_Robot_Y := (150.0 * COS(#stat_TimeSec * 0.5)) + #tmp_NoiseY;
+	    #q_Robot_Z := 50.0 + #tmp_NoiseZ;
+	    
+	    // --- Symulacja ZUŻYCIA PRĄDU ---
+	    // Maszyna pobiera bazowo ok 5.0 kW, do tego prąd faluje w miarę działania + szum obciążenia osi
+	    #q_PowerConsumption := 5.0 + (3.0 * ABS(SIN(#stat_TimeSec * 0.25))) + #tmp_NoisePwr;
+	    IF #q_PowerConsumption < 0.0 THEN // Zabezpieczenie fizyczne
+	        #q_PowerConsumption := 0.0;
+	    END_IF;
+	    
+	    // --- Symulacja PRODUKCJI CZĘŚCI ---
+	    // Pętla timera samoresetującego się co 3.5 sekundy
+	    #inst_Timer(IN := NOT #inst_Timer.Q,
+	                PT := T#3s500ms);
+	                
+	    IF #inst_Timer.Q THEN
+	        #stat_Pieces := #stat_Pieces + 1;
+	    END_IF;
+	    
+	    #q_PieceCount := #stat_Pieces;
+	    
+	ELSE
+	    // Maszyna na "postoju": Osie wolno opadają lub stoją sztywno bez szumu
+	    #q_Robot_X := 0.0;
+	    #q_Robot_Y := 0.0;
+	    #q_Robot_Z := 0.0;
+	    
+	    // Prąd w stanie czuwania na płycie głównej
+	    #q_PowerConsumption := 0.5 + (#tmp_NoisePwr * 0.05); 
+	    
+	    // Nie produkujemy, więc tylko aktualizujemy wyjście by nie zniknęło
+	    #q_PieceCount := #stat_Pieces;
+	END_IF;
+END_FUNCTION_BLOCK

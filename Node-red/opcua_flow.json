@@ -1,0 +1,229 @@
+[
+    {
+        "id": "f6bee49d.09de98",
+        "type": "tab",
+        "label": "PLC to MQTT Gateway",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "e1a1a1a1.000001",
+        "type": "OpcUa-Endpoint",
+        "z": "f6bee49d.09de98",
+        "endpoint": "opc.tcp://192.168.0.1:4840",
+        "secpol": "None",
+        "secmode": "None",
+        "none": true,
+        "login": false,
+        "usercert": false,
+        "usercreds": false
+    },
+    {
+        "id": "mqtt_broker_hivemq",
+        "type": "mqtt-broker",
+        "name": "HiveMQ Public",
+        "broker": "broker.hivemq.com",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "inject_1s",
+        "type": "inject",
+        "z": "f6bee49d.09de98",
+        "name": "Poll every 1s",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 40,
+        "wires": [
+            [
+                "it_robot_x",
+                "it_robot_y",
+                "it_robot_z",
+                "it_power",
+                "it_pieces"
+            ]
+        ]
+    },
+    {
+        "id": "it_robot_x",
+        "type": "OpcUa-Item",
+        "z": "f6bee49d.09de98",
+        "item": "ns=3;s=\"DB_MachineData\".\"Robot_X\"",
+        "datatype": "Real",
+        "value": "",
+        "name": "Robot_X",
+        "x": 140,
+        "y": 100,
+        "wires": [
+            [
+                "opc_client"
+            ]
+        ]
+    },
+    {
+        "id": "it_robot_y",
+        "type": "OpcUa-Item",
+        "z": "f6bee49d.09de98",
+        "item": "ns=3;s=\"DB_MachineData\".\"Robot_Y\"",
+        "datatype": "Real",
+        "value": "",
+        "name": "Robot_Y",
+        "x": 140,
+        "y": 140,
+        "wires": [
+            [
+                "opc_client"
+            ]
+        ]
+    },
+    {
+        "id": "it_robot_z",
+        "type": "OpcUa-Item",
+        "z": "f6bee49d.09de98",
+        "item": "ns=3;s=\"DB_MachineData\".\"Robot_Z\"",
+        "datatype": "Real",
+        "value": "",
+        "name": "Robot_Z",
+        "x": 140,
+        "y": 180,
+        "wires": [
+            [
+                "opc_client"
+            ]
+        ]
+    },
+    {
+        "id": "it_power",
+        "type": "OpcUa-Item",
+        "z": "f6bee49d.09de98",
+        "item": "ns=3;s=\"DB_MachineData\".\"PowerConsumption\"",
+        "datatype": "Real",
+        "value": "",
+        "name": "PowerConsumption",
+        "x": 170,
+        "y": 220,
+        "wires": [
+            [
+                "opc_client"
+            ]
+        ]
+    },
+    {
+        "id": "it_pieces",
+        "type": "OpcUa-Item",
+        "z": "f6bee49d.09de98",
+        "item": "ns=3;s=\"DB_MachineData\".\"PieceCount\"",
+        "datatype": "Int32",
+        "value": "",
+        "name": "PieceCount",
+        "x": 140,
+        "y": 260,
+        "wires": [
+            [
+                "opc_client"
+            ]
+        ]
+    },
+    {
+        "id": "opc_client",
+        "type": "OpcUa-Client",
+        "z": "f6bee49d.09de98",
+        "endpoint": "e1a1a1a1.000001",
+        "action": "read",
+        "deadbandtype": "a",
+        "deadbandvalue": 1,
+        "samplestat": false,
+        "name": "Siemens PLC Client",
+        "x": 420,
+        "y": 180,
+        "wires": [
+            [
+                "aggregator_fn"
+            ]
+        ]
+    },
+    {
+        "id": "aggregator_fn",
+        "type": "function",
+        "z": "f6bee49d.09de98",
+        "name": "Assemble JSON",
+        "func": "// Inicjalizacja obiektu w kontekście przepływu, jeśli nie istnieje\nlet data = context.get('machineData') || {};\n\n// Identyfikacja, który tag przyszedł (na podstawie nazwy noda lub topicu)\n// Węzły OpcUa-Item przekazują informację o tagu w msg.topic lub msg.browseName\nlet tagName = msg.topic.split('.').pop().replace(/\"/g, \"\");\n\ndata[tagName] = msg.payload;\ncontext.set('machineData', data);\n\n// Wysyłaj pełną paczkę tylko co 1s (żeby nie spamować MQTT przy każdym pojedynczym odczycie)\n// Albo prościej: po prostu emituj przy każdym odczycie, MQTT sobie poradzi\nmsg.payload = data;\nmsg.topic = \"factory/machine1/telemetry\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 180,
+        "wires": [
+            [
+                "mqtt_out",
+                "debug_out"
+            ]
+        ]
+    },
+    {
+        "id": "mqtt_out",
+        "type": "mqtt out",
+        "z": "f6bee49d.09de98",
+        "name": "Mendix MQTT Pub",
+        "topic": "factory/machine1/telemetry",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "mqtt_broker_hivemq",
+        "x": 870,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "debug_out",
+        "type": "debug",
+        "z": "f6bee49d.09de98",
+        "name": "Telemetry Pack",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 240,
+        "wires": []
+    }
+]

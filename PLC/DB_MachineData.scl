@@ -1,0 +1,15 @@
+DATA_BLOCK "DB_MachineData"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+NON_RETAIN
+   VAR 
+      Robot_X : Real;   // Pozycja X (z FB_Simulator)
+      Robot_Y : Real;   // Pozycja Y (z FB_Simulator)
+      Robot_Z : Real;   // Pozycja Z (z FB_Simulator)
+      PowerConsumption : Real;   // Zużycie prądu (kW)
+      PieceCount : DInt;   // Licznik wyprodukowanych sztuk
+   END_VAR
+
+BEGIN
+
+END_DATA_BLOCK

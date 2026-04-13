@@ -1,0 +1,20 @@
+ORGANIZATION_BLOCK "Main"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_TEMP 
+      temp_Sim_Enable : Bool;
+   END_VAR
+
+BEGIN
+	// 1. Warunek logiczny pracy (dla testów ustawione na TRUE)
+	#temp_Sim_Enable := TRUE;
+	
+	// 2. WYWOŁANIE SYMULATORA
+	"inst_Simulator"(i_Enable          := #temp_Sim_Enable,
+	                 q_Robot_X         => "DB_MachineData".Robot_X,
+	                 q_Robot_Y         => "DB_MachineData".Robot_Y,
+	                 q_Robot_Z         => "DB_MachineData".Robot_Z,
+	                 q_PowerConsumption => "DB_MachineData".PowerConsumption,
+	                 q_PieceCount     => "DB_MachineData".PieceCount);
+	
+END_ORGANIZATION_BLOCK

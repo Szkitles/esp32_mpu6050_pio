@@ -1,0 +1,1041 @@
+[
+    {
+        "id": "3590d91ecee7d01a",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "f37f2c40fb45066e",
+        "type": "junction",
+        "z": "3590d91ecee7d01a",
+        "x": 640,
+        "y": 640,
+        "wires": [
+            [
+                "e96b8768c5ee07ec"
+            ]
+        ]
+    },
+    {
+        "id": "73eff9056c42b603",
+        "type": "mqtt in",
+        "z": "3590d91ecee7d01a",
+        "name": "Status",
+        "topic": "factory/machine1/status",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "5826945474608c6f",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 330,
+        "y": 260,
+        "wires": [
+            [
+                "658aadf03bcb6b46"
+            ]
+        ]
+    },
+    {
+        "id": "4673d783b064dea1",
+        "type": "mqtt in",
+        "z": "3590d91ecee7d01a",
+        "name": "Normal",
+        "topic": "factory/machine1/vibration/normal",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "5826945474608c6f",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 330,
+        "y": 320,
+        "wires": [
+            [
+                "1dc705a083800799"
+            ]
+        ]
+    },
+    {
+        "id": "fbff15c33f46b569",
+        "type": "mqtt in",
+        "z": "3590d91ecee7d01a",
+        "name": "Anomaly",
+        "topic": "factory/machine1/vibration/anomaly",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "5826945474608c6f",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 340,
+        "y": 420,
+        "wires": [
+            [
+                "d5b94a872810269a"
+            ]
+        ]
+    },
+    {
+        "id": "0ef09c4708cbe884",
+        "type": "mqtt in",
+        "z": "3590d91ecee7d01a",
+        "name": "Alarms",
+        "topic": "factory/machine1/alarms",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "5826945474608c6f",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 350,
+        "y": 720,
+        "wires": [
+            [
+                "f37f2c40fb45066e"
+            ]
+        ]
+    },
+    {
+        "id": "f6977eac9348af13",
+        "type": "function",
+        "z": "3590d91ecee7d01a",
+        "name": "StringToReal",
+        "func": "msg.payload = parseFloat(msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 380,
+        "wires": [
+            [
+                "e85693c6972513e3",
+                "9169477606378264"
+            ]
+        ]
+    },
+    {
+        "id": "9afc3ba2e11672a3",
+        "type": "ui_chart",
+        "z": "3590d91ecee7d01a",
+        "name": "Vibration",
+        "group": "e9ab54aa1790f861",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "label": "Vibration",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "step",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "100",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#050505",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1200,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "658aadf03bcb6b46",
+        "type": "ui_text",
+        "z": "3590d91ecee7d01a",
+        "group": "e9ab54aa1790f861",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "UI_Status",
+        "label": "Status",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1200,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "e96b8768c5ee07ec",
+        "type": "ui_text",
+        "z": "3590d91ecee7d01a",
+        "group": "e9ab54aa1790f861",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "UI_Alarms",
+        "label": "Alarms",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1190,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "1dc705a083800799",
+        "type": "change",
+        "z": "3590d91ecee7d01a",
+        "name": "ChangeName",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Normal",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 520,
+        "y": 320,
+        "wires": [
+            [
+                "f6977eac9348af13"
+            ]
+        ]
+    },
+    {
+        "id": "d5b94a872810269a",
+        "type": "change",
+        "z": "3590d91ecee7d01a",
+        "name": "ChangeName",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Anomaly",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 520,
+        "y": 420,
+        "wires": [
+            [
+                "f6977eac9348af13"
+            ]
+        ]
+    },
+    {
+        "id": "9f8ff1352aa4031b",
+        "type": "inject",
+        "z": "3590d91ecee7d01a",
+        "name": "RestartChart",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[]",
+        "payloadType": "json",
+        "x": 930,
+        "y": 460,
+        "wires": [
+            [
+                "9afc3ba2e11672a3"
+            ]
+        ]
+    },
+    {
+        "id": "e85693c6972513e3",
+        "type": "range",
+        "z": "3590d91ecee7d01a",
+        "minin": "0",
+        "maxin": "1",
+        "minout": "0",
+        "maxout": "100",
+        "action": "scale",
+        "round": false,
+        "property": "payload",
+        "name": "",
+        "x": 920,
+        "y": 380,
+        "wires": [
+            [
+                "9afc3ba2e11672a3"
+            ]
+        ]
+    },
+    {
+        "id": "ea7f617b211d57da",
+        "type": "ui_button",
+        "z": "3590d91ecee7d01a",
+        "name": "",
+        "group": "e9ab54aa1790f861",
+        "order": 3,
+        "width": "4",
+        "height": "2",
+        "passthru": false,
+        "label": "Reset Alarm",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": " ",
+        "payloadType": "str",
+        "topic": "payload",
+        "topicType": "msg",
+        "x": 330,
+        "y": 560,
+        "wires": [
+            [
+                "f37f2c40fb45066e"
+            ]
+        ]
+    },
+    {
+        "id": "352e2df158a24cfc",
+        "type": "trigger",
+        "z": "3590d91ecee7d01a",
+        "name": "",
+        "op1": " 1",
+        "op2": " ",
+        "op1type": "str",
+        "op2type": "str",
+        "duration": "5",
+        "extend": true,
+        "overrideDelay": false,
+        "units": "s",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 1060,
+        "y": 540,
+        "wires": [
+            [
+                "e96b8768c5ee07ec"
+            ]
+        ]
+    },
+    {
+        "id": "9169477606378264",
+        "type": "switch",
+        "z": "3590d91ecee7d01a",
+        "name": ">0.9",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 630,
+        "y": 540,
+        "wires": [
+            [
+                "ddf803acf34c67c9",
+                "74d78552eff3098d"
+            ]
+        ]
+    },
+    {
+        "id": "ddf803acf34c67c9",
+        "type": "switch",
+        "z": "3590d91ecee7d01a",
+        "name": "SelectNormal",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "Normal",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 860,
+        "y": 540,
+        "wires": [
+            [
+                "352e2df158a24cfc"
+            ]
+        ]
+    },
+    {
+        "id": "19ebef79e7804164",
+        "type": "http request",
+        "z": "3590d91ecee7d01a",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://localhost:8080/rest/machine/v1/alarm",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1530,
+        "y": 740,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "cecb35b448c31cc4",
+        "type": "OpcUa-Client",
+        "z": "3590d91ecee7d01a",
+        "endpoint": "8577cbc3a18dbe5e",
+        "action": "read",
+        "deadbandtype": "a",
+        "deadbandvalue": 1,
+        "time": 10,
+        "timeUnit": "s",
+        "certificate": "n",
+        "localfile": "",
+        "localkeyfile": "",
+        "securitymode": "None",
+        "securitypolicy": "None",
+        "useTransport": false,
+        "maxChunkCount": 1,
+        "maxMessageSize": 8192,
+        "receiveBufferSize": 8192,
+        "sendBufferSize": 8192,
+        "setstatusandtime": false,
+        "keepsessionalive": false,
+        "name": "",
+        "applicationName": "",
+        "applicationUri": "",
+        "x": 820,
+        "y": 1020,
+        "wires": [
+            [
+                "974c13bc84b01771",
+                "my_switch",
+                "232eaa93fb4337a8"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "731436b1c3bada8c",
+        "type": "OpcUa-Item",
+        "z": "3590d91ecee7d01a",
+        "item": "ns=3;s=\"DB_MachineData\".\"RobotX\"",
+        "datatype": "Float",
+        "value": "",
+        "name": "RobotX",
+        "x": 540,
+        "y": 980,
+        "wires": [
+            [
+                "cecb35b448c31cc4"
+            ]
+        ]
+    },
+    {
+        "id": "0c9ae7b83eb68276",
+        "type": "OpcUa-Item",
+        "z": "3590d91ecee7d01a",
+        "item": "ns=3;s=\"DB_MachineData\".\"RobotY\"",
+        "datatype": "Float",
+        "value": "",
+        "name": "RobotY",
+        "x": 540,
+        "y": 1020,
+        "wires": [
+            [
+                "cecb35b448c31cc4"
+            ]
+        ]
+    },
+    {
+        "id": "7612bb2f66f39dda",
+        "type": "OpcUa-Item",
+        "z": "3590d91ecee7d01a",
+        "item": "ns=3;s=\"DB_MachineData\".\"RobotZ\"",
+        "datatype": "Float",
+        "value": "",
+        "name": "RobotZ",
+        "x": 540,
+        "y": 1060,
+        "wires": [
+            [
+                "cecb35b448c31cc4"
+            ]
+        ]
+    },
+    {
+        "id": "f410a67855af7cf4",
+        "type": "OpcUa-Item",
+        "z": "3590d91ecee7d01a",
+        "item": "ns=3;s=\"DB_MachineData\".\"PowerConsumption\"",
+        "datatype": "Float",
+        "value": "",
+        "name": "PowerConsumption",
+        "x": 570,
+        "y": 1100,
+        "wires": [
+            [
+                "cecb35b448c31cc4"
+            ]
+        ]
+    },
+    {
+        "id": "974c13bc84b01771",
+        "type": "debug",
+        "z": "3590d91ecee7d01a",
+        "name": "OPC UA Output",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1120,
+        "y": 960,
+        "wires": []
+    },
+    {
+        "id": "5aff13a0c8a59648",
+        "type": "inject",
+        "z": "3590d91ecee7d01a",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 1020,
+        "wires": [
+            [
+                "3ffbde21805a5db9",
+                "cd28b9b55ddcd10f",
+                "013f3a5fb7a3173f",
+                "5ffec4117246db68"
+            ]
+        ]
+    },
+    {
+        "id": "945eddddde54cf12",
+        "type": "ui_text",
+        "z": "3590d91ecee7d01a",
+        "group": "e9ab54aa1790f861",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "UI_RobotX",
+        "label": "Robot X",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1390,
+        "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "4fd1e8dec7cb787c",
+        "type": "ui_text",
+        "z": "3590d91ecee7d01a",
+        "group": "e9ab54aa1790f861",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "UI_RobotY",
+        "label": "Robot Y",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1390,
+        "y": 1060,
+        "wires": []
+    },
+    {
+        "id": "1bb94ca4c111826a",
+        "type": "ui_text",
+        "z": "3590d91ecee7d01a",
+        "group": "e9ab54aa1790f861",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "UI_RobotZ",
+        "label": "Robot Z",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1390,
+        "y": 1100,
+        "wires": []
+    },
+    {
+        "id": "11e3ef68e4029635",
+        "type": "ui_text",
+        "z": "3590d91ecee7d01a",
+        "group": "e9ab54aa1790f861",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "UI_PowerConsumption",
+        "label": "PowerConsumption",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1350,
+        "y": 1140,
+        "wires": []
+    },
+    {
+        "id": "my_switch",
+        "type": "switch",
+        "z": "3590d91ecee7d01a",
+        "name": "Rozdzielacz Tagów",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "cont",
+                "v": "RobotX",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "RobotY",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "RobotZ",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "PowerConsumption",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 4,
+        "x": 1110,
+        "y": 1080,
+        "wires": [
+            [
+                "945eddddde54cf12"
+            ],
+            [
+                "4fd1e8dec7cb787c"
+            ],
+            [
+                "1bb94ca4c111826a"
+            ],
+            [
+                "11e3ef68e4029635"
+            ]
+        ]
+    },
+    {
+        "id": "3ffbde21805a5db9",
+        "type": "change",
+        "z": "3590d91ecee7d01a",
+        "name": "RobotX",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "RobotX",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 360,
+        "y": 980,
+        "wires": [
+            [
+                "731436b1c3bada8c"
+            ]
+        ]
+    },
+    {
+        "id": "cd28b9b55ddcd10f",
+        "type": "change",
+        "z": "3590d91ecee7d01a",
+        "name": "RobotY",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "RobotY",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 360,
+        "y": 1020,
+        "wires": [
+            [
+                "0c9ae7b83eb68276"
+            ]
+        ]
+    },
+    {
+        "id": "013f3a5fb7a3173f",
+        "type": "change",
+        "z": "3590d91ecee7d01a",
+        "name": "RobotZ",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "RobotZ",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 360,
+        "y": 1060,
+        "wires": [
+            [
+                "7612bb2f66f39dda"
+            ]
+        ]
+    },
+    {
+        "id": "5ffec4117246db68",
+        "type": "change",
+        "z": "3590d91ecee7d01a",
+        "name": "PowerConsumption",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "PowerConsumption",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 370,
+        "y": 1100,
+        "wires": [
+            [
+                "f410a67855af7cf4"
+            ]
+        ]
+    },
+    {
+        "id": "a1645d55d59ee807",
+        "type": "mqtt out",
+        "z": "3590d91ecee7d01a",
+        "name": "Mendix Mqtt",
+        "topic": "smartfactory/maciej/machine1",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "5826945474608c6f",
+        "x": 1390,
+        "y": 1220,
+        "wires": []
+    },
+    {
+        "id": "232eaa93fb4337a8",
+        "type": "function",
+        "z": "3590d91ecee7d01a",
+        "name": "Message Mendix",
+        "func": "// Otwórz pamięć tymczasową (zbieramy tu dane aż przyjdą wszystkie z PLC)\nlet data = context.get('mendixPayload') || {};\n\n// Skracamy nazwy i przypisujemy wartości\nif (msg.topic.includes(\"RobotX\")) data.RobotX = msg.payload;\nif (msg.topic.includes(\"RobotY\")) data.RobotY = msg.payload;\nif (msg.topic.includes(\"RobotZ\")) data.RobotZ = msg.payload;\nif (msg.topic.includes(\"PowerConsumption\")) data.PowerConsumption = msg.payload;\n\n// Zapisz aktualizację \ncontext.set('mendixPayload', data);\n\n// Jeśli mamy już komplet 4 parametrów z maszyny...\nif (data.RobotX !== undefined && data.RobotY !== undefined && data.RobotZ !== undefined && data.PowerConsumption !== undefined) {\n\n    // Tworzymy śliczny pakiet dla Mendixa (dodajemy stempel czasowy z Node-RED)\n    let finalMsg = {\n        payload: {\n            \"RobotX\": data.RobotX,\n            \"RobotY\": data.RobotY,\n            \"RobotZ\": data.RobotZ,\n            \"PowerConsumption\": data.PowerConsumption,\n            \"Timestamp\": new Date().toISOString()\n        }\n    };\n\n    // Kasujemy bufory pod kolejny odczyt z PLC\n    context.set('mendixPayload', {});\n\n    return finalMsg;\n}\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1070,
+        "y": 1220,
+        "wires": [
+            [
+                "a1645d55d59ee807"
+            ]
+        ]
+    },
+    {
+        "id": "74d78552eff3098d",
+        "type": "switch",
+        "z": "3590d91ecee7d01a",
+        "name": "SelectAnomaly",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "Anomaly",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 780,
+        "y": 740,
+        "wires": [
+            [
+                "64db2770f01adfb1"
+            ]
+        ]
+    },
+    {
+        "id": "776c1317345f17ab",
+        "type": "change",
+        "z": "3590d91ecee7d01a",
+        "name": "Prepare Message Json to Mendix",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{   \"LineID\": \"Linia Montażu L1\",   \"MachineID\": \"Pump-S3\",   \"ComponentID\": \"Łożysko Wrzeciona\",   \"AlarmCode\": \"ERR-VIB-01\",   \"Priority\": \"High\",   \"Message\": \"Zarejestrowano krytyczne drgania łożyska (0.95).\" }",
+                "tot": "json"
+            },
+            {
+                "t": "set",
+                "p": "headers",
+                "pt": "msg",
+                "to": "{\"Content-Type\": \"application/json\"}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1260,
+        "y": 740,
+        "wires": [
+            [
+                "19ebef79e7804164",
+                "fd4e83facbd11512"
+            ]
+        ]
+    },
+    {
+        "id": "fd4e83facbd11512",
+        "type": "debug",
+        "z": "3590d91ecee7d01a",
+        "name": "Alarm Mendix",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1520,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "64db2770f01adfb1",
+        "type": "delay",
+        "z": "3590d91ecee7d01a",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "45",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": true,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 980,
+        "y": 740,
+        "wires": [
+            [
+                "776c1317345f17ab"
+            ]
+        ]
+    },
+    {
+        "id": "5826945474608c6f",
+        "type": "mqtt-broker",
+        "name": "ESP S3",
+        "broker": "192.168.31.180",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "e9ab54aa1790f861",
+        "type": "ui_group",
+        "name": "ESP S3",
+        "tab": "fa1d2701338efdd9",
+        "order": 1,
+        "disp": true,
+        "width": "18",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "8577cbc3a18dbe5e",
+        "type": "OpcUa-Endpoint",
+        "name": "PLC",
+        "endpoint": "opc.tcp://192.168.31.50:4840",
+        "secpol": "None",
+        "secmode": "None",
+        "none": true,
+        "login": false,
+        "usercert": false,
+        "usercertificate": "",
+        "userprivatekey": ""
+    },
+    {
+        "id": "fa1d2701338efdd9",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "90a8fa31fc41b621",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-dashboard": "3.6.6",
+            "node-red-contrib-opcua": "0.2.348"
+        }
+    }
+]
